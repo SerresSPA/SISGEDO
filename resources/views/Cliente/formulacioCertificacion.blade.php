@@ -2,8 +2,11 @@
 
 
                 <!-- contenido -->
-               
 
+<script>
+    
+
+</script>
 @section('content')
 <div class="container-fluid" id="divUsers">
     <div class="row justify-content-center">
@@ -232,11 +235,12 @@
                             </div>
                             <div class="col-xs-12 col-md-2">
                                 <label>Año (*)</label>
-                                <input type="number" name="ano" min=2015 max=2029 class="form-control" required>
+                                <input type="number" name="ano" min=2018 max="{{ now()->year }}" id="solicitudAnio" class="form-control" value="{{ now()->year }}" required>
                             </div>
                             <div class="col-xs-12 col-md-2">
                                 <label>Mes (*)</label>
-                                <select class="form-control" name="mes" required>
+                                
+                                <select class="form-control" name="mes" id="solicitudMes" required>
                                     <option value="">Seleccione Mes</option>
                                     <option value="01">Enero</option>
                                     <option value="02">Febrero</option>
@@ -273,65 +277,73 @@
                             </div>
                             <div class="col-xs-12 col-md-9">
                                 <label>Nombre</label>
-                                <input type="text" witdth="2" class="form-control" readonly value="{{ $datos->estructura->empresa->nomContacto }} ">
+                                <input type="text" witdth="2" class="form-control" requiered >
+                                <!-- readonly value="{{ $datos->estructura->empresa->nomContacto }} "-->
                             </div>
                             
                             <div class="col-xs-12 col-md-3">
                                 <label>Teléfono</label>
-                                <input type="text" class="form-control" readonly value="{{ $datos->estructura->empresa->fonContacto }} ">
+                                <input type="text" class="form-control" required >
+                                <!-- readonly value="{{ $datos->estructura->empresa->fonContacto }} " -->
                             </div>
                             <div class="col-xs-12 col-md-12">
                                 <label>Email</label>
-                                <input type="text" witdth="2" class="form-control" readonly value="{{ $datos->estructura->empresa->emailContacto }} ">
+                                <input type="text" witdth="2" class="form-control" required >
+                                <!-- readonly value="{{ $datos->estructura->empresa->emailContacto }} " -->
                             </div>
                             <div class="col-xs-12 col-md-12 mt-2 ">
-                                <label><strong><h6>7.- Archivos para Adjuntar</h6></strong></label>
+                                <label><strong><h6>7.- Archivos para Adjuntar (no debe exceder los 100Mb)</h6></strong></label>
                             </div>
                             <div class="col-xs-12 col-md-12">
-                                <label><strong>Libro de Remuneraciones del Mes a Certificar (Necesario solo si son 5 o más Trabajadores)</strong></label>
-                                <input type="file" name="lib" witdth="2" class="form-control">
+                                <label><strong>Libro de Remuneraciones del Mes a Certificar (Necesario solo si son 5 o más Trabajadores). </br>favor adjuntar archivos pdf o en formato comprimido a continuación.</strong></label>
+                                <input type="file" name="lib" witdth="2" class="form-control" id="file" onchange="Filevalidation()" accept=".pdf,.rar,.zip,.7zip"> 
+                            </div>
+                            <!-- accept=".xls,.xlsx" -->
+                            <div class="col-xs-12 col-md-12">
+                                <label><strong>Liquidaciones de Sueldos del Mes a Certificar (firmadas por los trabajadores o comprobantes de abono en CTA. Bancaria del trabajador)(*) </br>favor adjuntar archivos pdf o en formato comprimido a continuación.</strong></label>
+                                <input type="file" name="liq" witdth="2" class="form-control" required id="file2" onchange="Filevalidation2()" accept=".pdf,.rar,.zip,.7zip">
                             </div>
                             <div class="col-xs-12 col-md-12">
-                                <label><strong>Liquidaciones de Sueldos del Mes a Certificar (firmadas por los trabajadores o comprobantes de abono en CTA. Bancaria del trabajador)(*)</strong></label>
-                                <input type="file" name="liq" witdth="2" class="form-control" required>
-                            </div>
-                            <div class="col-xs-12 col-md-12">
-                                <label><strong>Planilla de Imposiciones pagadas del Mes a Certificar(*)</strong></label>
-                                <input type="file" name="cot" witdth="2" class="form-control" required>
-                            </div>
-                            
-                            <div class="col-xs-12 col-md-12">
-                                <label><strong>Desvinculaciones del mes Articulo 161: Finiquitos del Mes Ratificados ante Notario o Ministro de Fe competente.</strong></label>
-                                <input type="file" name="fin161" witdth="2" class="form-control">
+                                <label><strong>Planilla de Imposiciones pagadas del Mes a Certificar(*)</br>favor adjuntar archivos pdf o en formato comprimido a continuación.</strong></label>
+                                <input type="file" name="cot" witdth="2" class="form-control" required id="file3" onchange="Filevalidation3()" accept=".pdf,.rar,.zip,.7zip">
                             </div>
 
 
+                             <!-- nuevos -->
+
+                        
                             <div class="col-xs-12 col-md-12">
-                                <label><strong>Desvinculaciones del mes otras causales (159, 160 y Anexos de Traslado): Finiquitos del Mes Ratificados ante Notario o Ministro de Fe competente. Para estas causales de no disponer del documento ratificado favor adjuntar Comprobante de carta de término del contrato de trabajo en Dirección del trabajo.</strong></label>
-                                <input type="file" name="fin" witdth="2" class="form-control">
+                                <label><strong>Desvinculado artículo 161 del Periodo: Finiquitos del Mes Ratificados ante Notario o Ministro de Fe competente</br>favor adjuntar archivos pdf o en formato comprimido a continuación.</strong></label>
+                                <input type="file" name="fin161" witdth="2" class="form-control" id="file8" onchange="Filevalidation8()" accept=".pdf,.rar,.zip,.7zip">
+                            </div>
+                           
+
+                            <div class="col-xs-12 col-md-12">
+                                <label><strong>Desvinculados otras causales del Periodo: Finiquitos del Mes Ratificados ante Notario o Ministro de Fe competente, Anexos de traslado, Pacto de Suspensión de Contrato u otros.</br>favor adjuntar archivos pdf o en formato comprimido a continuación.</strong></label>
+                                <input type="file" name="fin" witdth="2" class="form-control" id="file4" onchange="Filevalidation4()" accept=".pdf,.rar,.zip,.7zip">
                             </div>
                             
                             <!-- nuevos -->
                             <div class="col-xs-12 col-md-12">
-                                <label><strong>Nómina de Trabajadores a Certificar (subir archivo en formato Excel), Nómina de Trabajadores con Suspensión de Contrato Informados en AFC (*)</strong></label>
-                                <input type="file" name="nom" witdth="2" class="form-control" required>
+                                <label><strong>Nómina de Trabajadores a Certificar (*)</br>favor adjuntar archivos en formato excel a continuación.</strong></label>
+                                <input type="file" name="nom" witdth="2" class="form-control" required id="file5" onchange="Filevalidation5()" accept=".xls,.xlsx,.xlsm,.csv">
                             </div>
                             <div class="col-xs-12 col-md-12">
-                                <label><strong> Documentación Obligatoria Nuevos Trabajadores: Contratos de trabajo,  Registro entrega EPP, Asistencia charla ODI, F29 u otros</strong></label>
-                                <input type="file" name="con" witdth="2" class="form-control">
+                                <label><strong> Documentación Obligatoria Nuevos Trabajadores: Contratos de trabajo,  Registro entrega EPP, Asistencia charla ODI, F29 u otros</br>favor adjuntar archivos pdf o en formato comprimido a continuación.</strong></label>
+                                <input type="file" name="con" witdth="2" class="form-control" id="file6" onchange="Filevalidation6()" accept=".pdf,.rar,.zip,.7zip">
                             </div>
               
                             <!-- fin nuevos -->
 
                              <!-- nuevos -->
                              @if($datos->estructura->proyecto->empresa->mutualidad=="SMU")
-
                              <div class="col-xs-12 col-md-12">
-                                <label><strong>Póliza Covid  por trabajador. En caso de nuevos trabajadores en nomina debe adjuntar póliza individual de los trabajadores</strong></label>
-                                <input type="file" name="cov19" witdth="2" class="form-control">
+                                <label><strong>Póliza Covid 19</br>favor adjuntar archivos pdf o en formato comprimido a continuación.</strong></label>
+                                <input type="file" name="cov19" witdth="2" class="form-control" id="file7" onchange="Filevalidation7()" accept=".pdf,.rar,.zip,.7zip">
                             </div>
-                            
                             @endif
+
+                            
                             <!-- fin nuevos -->
 
 
